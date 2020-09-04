@@ -1,16 +1,21 @@
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+
+import static javax.swing.BoxLayout.X_AXIS;
 
 
-
-public class Gui extends Game implements ActionListener{
+public class Gui extends Game implements ActionListener {
     private Game game;
     private JFrame frame;
     private int boardWidth;
     private int boardHeight;
+    private int mineCounter;
     private JButton[][] gameGrid;
     private ImageIcon imageHidden;
     private ImageIcon image0;
@@ -36,6 +41,7 @@ public class Gui extends Game implements ActionListener{
     public Gui()  {
         boardWidth=29;
         boardHeight=16;
+        mineCounter=20;
         gameGrid=new JButton[boardHeight][boardWidth];
         loadImages();
         frame = new JFrame("Minesweeper");
@@ -53,6 +59,54 @@ public class Gui extends Game implements ActionListener{
         gameOptions.add(gameOptionsNG);
         gameOptions.add(gameOptionOptions);
         gameOptions.add(gamesOptionsExit);
+        //GameOptions Action Listener
+        gameOptionOptions.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent ev) {
+                //int ans = Integer.parseInt( JOptionPane.showInputDialog(frame, "Text", JOptionPane.INFORMATION_MESSAGE, null, null, "[sample text to help input]"));
+                JFrame optionsFrame=new JFrame();
+                JPanel options = new JPanel();
+                optionsFrame.add(options);
+                options.setLayout(new BoxLayout(options,BoxLayout.Y_AXIS));
+                Container contentPane = optionsFrame.getContentPane();
+                contentPane.add(options);
+                optionsFrame.setSize(155,155);
+                optionsFrame.setLocationRelativeTo(frame);
+                options.setBorder(new EmptyBorder(25,25,25,25));
+                //Panel Width
+                JPanel width = new JPanel();
+                width.setLayout(new BoxLayout(width,X_AXIS));
+                JLabel widthLabel = new JLabel("Width ");
+                widthLabel.setSize(40,15);
+                JTextField widthValue = new JTextField();
+                widthValue.setSize(40,15);
+                //Panel Height
+                JPanel height= new JPanel();
+                height.setLayout(new BoxLayout(height,X_AXIS));
+                JLabel heightLabel = new JLabel("Height ");
+                heightLabel.setSize(40,15);
+                JTextField heightValue = new JTextField();
+                heightValue.setSize(40,15);
+                //JPanel Mines
+                JPanel mines = new JPanel();
+                mines.setLayout(new BoxLayout(mines,X_AXIS));
+                JLabel minesLabel = new JLabel("Mines ");
+                minesLabel.setSize(40,15);
+                JTextField minesValue = new JTextField();
+                minesValue.setSize(40,15);
+                mines.add(minesLabel);
+                mines.add(minesValue);
+                options.add(mines);
+                height.add(heightLabel);
+                height.add(heightValue);
+                options.add(height);
+                width.add(widthLabel);
+                width.add(widthValue);
+                JButton confirm =new JButton("OK");
+                options.add(width);
+                options.add(confirm);
+                optionsFrame.setVisible(true);
+            }
+        });
         //Help Options
         JMenuItem helpOptionsPlay = new JMenuItem("How to Play");
         JMenuItem helpOptionsAbout = new JMenuItem("About");
@@ -66,7 +120,6 @@ public class Gui extends Game implements ActionListener{
         JLabel mineRemain = new JLabel("Mines");
         JLabel time = new JLabel("000");
         JButton newGameBtn = new JButton("New Game");
-
         gameInfoPanel.add(mineRemain);
         gameInfoPanel.add(newGameBtn);
         gameInfoPanel.add(time);
@@ -93,7 +146,7 @@ public class Gui extends Game implements ActionListener{
         //frame.setSize(400,400);
         frame.setVisible(true);
 
-        game=new Game(boardHeight,boardWidth);
+        game=new Game(boardHeight,boardWidth,mineCounter);
        updateIcon();
         for(int x=0;x<boardWidth;x++){
             for(int y=0;y<boardHeight;y++) {
@@ -121,6 +174,7 @@ public class Gui extends Game implements ActionListener{
         });
 
     }
+
     public void actionPerformed(ActionEvent e){
         int xcoord;
         int ycoord;
@@ -148,7 +202,27 @@ public class Gui extends Game implements ActionListener{
                 frame.dispose();
                 new Gui();
             }
+            else if(checkWin()){
+                JOptionPane.showMessageDialog(frame, "You Win","Oh Yeah!",JOptionPane.WARNING_MESSAGE);
+                frame.dispose();
+                new Gui();
+            }
         }
+    }
+    public boolean checkWin(){
+        int spacesLeft=0;
+        for(int x=0;x<boardWidth;x++){
+            for(int y=0;y<boardHeight;y++) {
+                Square currentSpace=game.getSquare(x,y);
+                if (currentSpace.isHidden()){
+                    spacesLeft++;
+                }
+            }
+        }
+        if(spacesLeft == mineCounter){
+            return true;
+        }
+        return false;
     }
     public void updateIcon(){
         //turn into switch case and load all pictures beforehand (in main)
@@ -241,6 +315,8 @@ public class Gui extends Game implements ActionListener{
         ImageIcon resizedImage = new ImageIcon(newimg);
         return resizedImage;
     }
+
+
 }
 
 

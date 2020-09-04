@@ -19,12 +19,13 @@ public class Game extends Square {
     }
 
     //Game Board with different options selected
-    public Game(int boardHeight, int boardWidth){
+    public Game(int boardHeight, int boardWidth, int mineCounter){
         this.boardWidth=boardWidth;
         this.boardHeight=boardHeight;
+        this.mineCounter=mineCounter;
         gameGrid=new Square[boardHeight][boardWidth];
         random=new Random();
-        generateGameBoard(boardHeight,boardWidth,10);
+        generateGameBoard(boardHeight,boardWidth,mineCounter);
     }
 
     public void generateGameBoard(int height, int width, int mineCounter){
