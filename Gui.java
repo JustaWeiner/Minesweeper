@@ -35,13 +35,13 @@ public class Gui extends Game implements ActionListener {
 
     public static void main(String args[]){
 
-        Gui generateBoard = new Gui();
+        Gui generateBoard = new Gui(10,10,10);
 
     }
-    public Gui()  {
-        boardWidth=29;
-        boardHeight=16;
-        mineCounter=20;
+    public Gui(int boardWidth2,int boardHeight2,int mineCounter2)  {
+        this.boardHeight=boardHeight2;
+        this.boardWidth=boardWidth2;
+        this.mineCounter=mineCounter2;
         gameGrid=new JButton[boardHeight][boardWidth];
         loadImages();
         frame = new JFrame("Minesweeper");
@@ -102,6 +102,17 @@ public class Gui extends Game implements ActionListener {
                 width.add(widthLabel);
                 width.add(widthValue);
                 JButton confirm =new JButton("OK");
+                confirm.addActionListener(new ActionListener() {
+
+
+                    @Override
+                    public void actionPerformed(ActionEvent actionEvent) {
+                        boardWidth=Integer.parseInt(widthValue.getText());
+                        boardHeight=Integer.parseInt(heightValue.getText());
+                        mineCounter=Integer.parseInt(minesValue.getText());
+                        optionsFrame.dispose();
+                    }
+                });
                 options.add(width);
                 options.add(confirm);
                 optionsFrame.setVisible(true);
@@ -169,7 +180,7 @@ public class Gui extends Game implements ActionListener {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 frame.dispose();
-                new Gui();
+                new Gui(boardWidth,boardHeight,mineCounter);
             }
         });
 
@@ -200,12 +211,12 @@ public class Gui extends Game implements ActionListener {
                 //message box
                 JOptionPane.showMessageDialog(frame, "You lose","Oh No!",JOptionPane.WARNING_MESSAGE);
                 frame.dispose();
-                new Gui();
+                new Gui(boardWidth,boardHeight,mineCounter);
             }
             else if(checkWin()){
                 JOptionPane.showMessageDialog(frame, "You Win","Oh Yeah!",JOptionPane.WARNING_MESSAGE);
                 frame.dispose();
-                new Gui();
+                new Gui(boardWidth,boardHeight,mineCounter);
             }
         }
     }
