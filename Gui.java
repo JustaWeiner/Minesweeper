@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 
 public class Gui extends Game implements ActionListener{
     private Game game;
+    private JFrame frame;
     private int boardWidth;
     private int boardHeight;
     private JButton[][] gameGrid;
@@ -37,7 +38,7 @@ public class Gui extends Game implements ActionListener{
         boardHeight=16;
         gameGrid=new JButton[boardHeight][boardWidth];
         loadImages();
-        JFrame frame = new JFrame("Minesweeper");
+        frame = new JFrame("Minesweeper");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(400,400);
        // frame.setResizable(false);
@@ -125,6 +126,7 @@ public class Gui extends Game implements ActionListener{
         int ycoord;
         String[] coord;
         Object o = e.getSource();
+
         if(o instanceof JButton){
             JButton button = (JButton)o;
             coord=button.getName().split(",");
@@ -132,11 +134,20 @@ public class Gui extends Game implements ActionListener{
             ycoord=Integer.parseInt(coord[1]);
             System.out.println("x "+xcoord+" y: "+ycoord);
             Square currentSpace=game.getSquare(xcoord,ycoord);
-            if(currentSpace.getSpaceType()==9){
-                System.out.println("I'm a bomb :D");
-            }
+
             game.revealSquares(ycoord,xcoord);
             updateIcon();
+            if(currentSpace.getSpaceType()==9){
+                System.out.println("I'm a bomb :D");
+                //reveal all mines
+
+                //change icon of clicked mine
+
+                //message box
+                JOptionPane.showMessageDialog(frame, "You lose","Oh No!",JOptionPane.WARNING_MESSAGE);
+                frame.dispose();
+                new Gui();
+            }
         }
     }
     public void updateIcon(){
@@ -150,39 +161,44 @@ public class Gui extends Game implements ActionListener{
                     this.gameGrid[y][x].setIcon(imageHidden);
                 }
                 else{
-
-                    switch(spaceVal){
-                        case 0:
-                            this.gameGrid[y][x].setIcon(image0);
-                            break;
-                        case 1:
-                            this.gameGrid[y][x].setIcon(image1);
-                            break;
-                        case 2:
-                            this.gameGrid[y][x].setIcon(image2);
-                            break;
-                        case 3:
-                            this.gameGrid[y][x].setIcon(image3);
-                            break;
-                        case 4:
-                            this.gameGrid[y][x].setIcon(image4);
-                            break;
-                        case 5:
-                            this.gameGrid[y][x].setIcon(image5);
-                            break;
-                        case 6:
-                            this.gameGrid[y][x].setIcon(image6);
-                            break;
-                        case 7:
-                            this.gameGrid[y][x].setIcon(image7);
-                            break;
-                        case 8:
-                            this.gameGrid[y][x].setIcon(image8);
-                            break;
-                        case 9:
-                            this.gameGrid[y][x].setIcon(image9);
-                            break;
+                    if(space.hasFlag()){
+                        this.gameGrid[y][x].setIcon(imageFlag);
                     }
+                    else{
+                        switch(spaceVal){
+                            case 0:
+                                this.gameGrid[y][x].setIcon(image0);
+                                break;
+                            case 1:
+                                this.gameGrid[y][x].setIcon(image1);
+                                break;
+                            case 2:
+                                this.gameGrid[y][x].setIcon(image2);
+                                break;
+                            case 3:
+                                this.gameGrid[y][x].setIcon(image3);
+                                break;
+                            case 4:
+                                this.gameGrid[y][x].setIcon(image4);
+                                break;
+                            case 5:
+                                this.gameGrid[y][x].setIcon(image5);
+                                break;
+                            case 6:
+                                this.gameGrid[y][x].setIcon(image6);
+                                break;
+                            case 7:
+                                this.gameGrid[y][x].setIcon(image7);
+                                break;
+                            case 8:
+                                this.gameGrid[y][x].setIcon(image8);
+                                break;
+                            case 9:
+                                this.gameGrid[y][x].setIcon(mineClick);
+                                break;
+                        }
+                    }
+
 
                   }
                 }

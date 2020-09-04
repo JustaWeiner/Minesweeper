@@ -134,7 +134,7 @@ public class Game extends Square {
     public void revealSquares(int y,int x){
         //Make a check if its flagged, then if bomb then bombClick()
         //in if statement, add || isFlaged
-        if(gameGrid[y][x].isHidden() || gameGrid[y][x].hasFlag()==false) {
+        if(gameGrid[y][x].isHidden() || gameGrid[y][x].hasFlag()==true) {
             System.out.println("I am revealing at x: " + x + " y: " + y);
             gameGrid[y][x].setHidden(false);
             //if !flagged, else can reveal bomb and lose
